@@ -22,7 +22,7 @@ The fastest way to start — install four hand-picked CLIs and skills in one com
 npx -y @mvanhorn/printing-press install starter-pack
 ```
 
-The starter pack: [`espn`](library/media-and-entertainment/espn/) (live sports), [`flight-goat`](library/travel/flightgoat/) (flight search), [`movie-goat`](library/media-and-entertainment/movie-goat/) (movie discovery), [`recipe-goat`](library/food-and-dining/recipe-goat/) (recipe ranking).
+The starter pack: [`espn`](library/media-and-entertainment/espn/) (live sports), [`flight-goat`](library/travel/flight-goat/) (flight search), [`movie-goat`](library/media-and-entertainment/movie-goat/) (movie discovery), [`recipe-goat`](library/food-and-dining/recipe-goat/) (recipe ranking).
 
 Every install pulls the Go binary **and** the focused skill in one shot. Pass `--cli-only` or `--skill-only` if you want just one half.
 
@@ -50,8 +50,6 @@ npx -y @mvanhorn/printing-press update espn
 npx -y @mvanhorn/printing-press uninstall espn --yes
 ```
 
-While the catalog repository is private, live installer use requires `GITHUB_TOKEN` or `GH_TOKEN` for catalog and skill fetches, plus working private Go module access for `go install`.
-
 ## Focused skills
 
 When you already know the tool you want, install just that skill:
@@ -64,7 +62,7 @@ Then use the focused slash skill directly:
 
 ```text
 /pp-espn lakers score
-/pp-flightgoat sea to lax dec 24 to jan 1 nonstop
+/pp-flight-goat sea to lax dec 24 to jan 1 nonstop
 /pp-weather-goat phoenix forecast
 ```
 
@@ -180,7 +178,7 @@ A few worked examples:
 ```bash
 go install github.com/mvanhorn/printing-press-library/library/media-and-entertainment/espn/cmd/espn-pp-cli@latest
 go install github.com/mvanhorn/printing-press-library/library/monitoring/sentry/cmd/sentry-pp-cli@latest
-go install github.com/mvanhorn/printing-press-library/library/travel/flightgoat/cmd/flightgoat-pp-cli@latest
+go install github.com/mvanhorn/printing-press-library/library/travel/flight-goat/cmd/flight-goat-pp-cli@latest
 ```
 
 For the MCP server companion:
