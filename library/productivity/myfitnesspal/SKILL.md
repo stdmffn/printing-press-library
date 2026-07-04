@@ -13,7 +13,7 @@ metadata:
     install:
       - kind: go
         bins: [myfitnesspal-pp-cli]
-        module: github.com/mvanhorn/printing-press-library/library/other/myfitnesspal/cmd/myfitnesspal-pp-cli
+        module: github.com/mvanhorn/printing-press-library/library/productivity/myfitnesspal/cmd/myfitnesspal-pp-cli
 ---
 
 # MyFitnessPal — Printing Press CLI
@@ -32,7 +32,7 @@ This skill drives the `myfitnesspal-pp-cli` binary. **You must verify the CLI is
 If the `npx` install fails (no Node, offline, etc.), fall back to a direct Go install (requires Go 1.26.3 or newer):
 
 ```bash
-go install github.com/mvanhorn/printing-press-library/library/other/myfitnesspal/cmd/myfitnesspal-pp-cli@latest
+go install github.com/mvanhorn/printing-press-library/library/productivity/myfitnesspal/cmd/myfitnesspal-pp-cli@latest
 ```
 
 If `--version` reports "command not found" after install, the install step did not put the binary on `$PATH`. Do not proceed with skill commands until verification succeeds.
@@ -189,7 +189,9 @@ Longest run of days inside ±5% of your calorie goal. Goal value is read from th
 
 ## Auth Setup
 
-MyFitnessPal closed their public API. This CLI uses your logged-in browser session — log in to myfitnesspal.com in Chrome, then run `myfitnesspal-pp-cli auth login --chrome`. Cookies are read from the .myfitnesspal.com domain. Sessions usually last 7-30 days; when they expire, log in again in Chrome and re-run `auth login --chrome`.
+MyFitnessPal closed their public API. This CLI uses your logged-in browser session: log in to myfitnesspal.com in Chrome, then run `myfitnesspal-pp-cli auth login --chrome` (`--browser` is an alias). Cookie import requires one installed extractor: `pycookiecheat`, Homebrew `cookies`, or `cookie-scoop-cli`. If you use multiple Chrome profiles, pass `--profile "Profile Name"` when the extractor supports it.
+
+`auth login` reads cookies for `.myfitnesspal.com`, validates the session before saving it, and stores the cookie string in `~/.config/myfitnesspal-pp-cli/config.toml`. Live requests send that stored value as the `Cookie` header through the CLI's Chrome-fingerprinted Surf transport; the transport is what clears MyFitnessPal's anti-bot checks. Sessions usually last 7-30 days. When one expires, log in again in Chrome and run `myfitnesspal-pp-cli auth refresh` or `myfitnesspal-pp-cli auth login --chrome`.
 
 Run `myfitnesspal-pp-cli doctor` to verify setup.
 
@@ -285,7 +287,7 @@ Parse `$ARGUMENTS`:
 
 1. Install the MCP server:
    ```bash
-   go install github.com/mvanhorn/printing-press-library/library/other/myfitnesspal/cmd/myfitnesspal-pp-mcp@latest
+   go install github.com/mvanhorn/printing-press-library/library/productivity/myfitnesspal/cmd/myfitnesspal-pp-mcp@latest
    ```
 2. Register with Claude Code:
    ```bash

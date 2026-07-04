@@ -10,22 +10,7 @@ name: Govulncheck
 # dependency-presence hygiene rather than reachable vulnerability blocking.
 
 on:
-  pull_request:
-    paths:
-      - 'library/**/*.go'
-      - 'library/**/go.mod'
-      - 'library/**/go.sum'
   workflow_dispatch:
-    inputs:
-      scope:
-        description: 'Run against changed-code library CLIs or every library CLI'
-        required: true
-        default: changed
-        type: choice
-        options:
-          - changed
-          - all
-
 permissions:
   contents: read
 

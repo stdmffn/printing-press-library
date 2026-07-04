@@ -1,16 +1,7 @@
 name: Generate per-app skills
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'registry.json'
-      - 'library/**/.printing-press.json'
-      - 'library/**/SKILL.md'
-      - 'library/**/README.md'
-      - 'tools/generate-skills/main.go'
   workflow_dispatch:
-
 jobs:
   generate:
     runs-on: ubuntu-latest

@@ -19,34 +19,6 @@ name: Build CLI release artifacts
 
 on:
   workflow_dispatch:
-    inputs:
-      cli:
-        description: 'CLI to rebuild as <category>/<slug>, or "all" for every CLI in the library'
-        required: false
-        default: ''
-  push:
-    branches: [main]
-    paths:
-      # Inputs that actually affect the compiled CLI binary or MCPB
-      # bundle: Go source, module files, and the MCPB manifest. The
-      # //go:embed directive can include any file type, but in practice
-      # those files live inside cmd/ or internal/ (e.g. dub's
-      # internal/mcp/embedded_manifest.json), so this whitelist still
-      # catches them.
-      #
-      # Anything else under library/<cat>/<slug>/ — README.md, SKILL.md,
-      # LICENSE, NOTICE, Makefile, .golangci.yml, .goreleaser.yaml,
-      # .printing-press.json, spec.{yaml,json}, dogfood-results.json,
-      # workflow-verify-report.json, .manuscripts/** — is documentation,
-      # provenance, archived input, or post-build artifact and does not
-      # belong in the rebuild trigger.
-      - 'library/**/cmd/**'
-      - 'library/**/internal/**'
-      - 'library/**/go.mod'
-      - 'library/**/go.sum'
-      - 'library/**/manifest.json'
-      - '.github/workflows/build-mcpb.yml'
-
 permissions:
   contents: write  # for creating/updating releases
 

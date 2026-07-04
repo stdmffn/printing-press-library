@@ -17,22 +17,7 @@ name: Verify supply chain
 # false-positive miscalibration on real PRs (per the plan's KD7).
 
 on:
-  pull_request:
-    # Trigger only on paths that have associated scan signals — go.sum and
-    # package-lock.json don't, and including them produces no-op runs on
-    # routine `go mod tidy` / `npm install` commits (Greptile-flagged).
-    paths:
-      - '.github/workflows/**'
-      - '.github/scripts/verify-supply-chain/**'
-      - 'library/**/go.mod'
-      - 'npm/package.json'
   workflow_dispatch:
-    inputs:
-      strict:
-        description: 'Promote advisory findings to block-severity'
-        required: false
-        default: 'false'
-
 permissions:
   contents: read
 

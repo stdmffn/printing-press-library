@@ -109,7 +109,11 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 ## Authentication
 
-Three auth surfaces, ordered fastest to most permissioned. The local cache at ~/Library/Application Support/Granola/cache-v6.json needs no credentials. The internal API at api.granola.ai auto-discovers your WorkOS access_token from supabase.json / stored-accounts.json and rotates the refresh token through WorkOS on every call. The public API at public-api.granola.ai accepts a Bearer key in `GRANOLA_API_KEY` for workspace-scoped queries; it backs the typed `notes` and `folders` top-level commands and is the source when you pass `--data-source live`.
+Three auth/data surfaces, ordered fastest to most permissioned:
+
+1. **Desktop cache** — `sync` prefers `~/Library/Application Support/Granola/cache-v6.json.enc` and falls back to legacy plaintext `cache-v6.json`. On macOS, the first encrypted-cache read can trigger a Keychain prompt for `Granola Safe Storage`; choose "Always Allow" for silent later runs.
+2. **Internal API** — the CLI auto-discovers the WorkOS access token from `supabase.json.enc`, then legacy `supabase.json` / `stored-accounts.json`. When the token came from `supabase.json.enc`, the CLI does not rotate the refresh token; Granola desktop owns that token and rotating it from the CLI would sign the desktop app out. If it expires, open Granola desktop briefly and retry.
+3. **Public API** — `public-api.granola.ai` accepts a Bearer key in `GRANOLA_API_KEY` for workspace-scoped queries; it backs the typed `notes` and `folders` top-level commands and is the source when you pass `--data-source live`.
 
 ## Quick Start
 
@@ -329,7 +333,7 @@ Environment variables:
 
 ### API-specific
 
-- **doctor reports cache file not found** — Make sure Granola is installed and you’ve opened it at least once. Override the path with GRANOLA_CACHE_PATH=/custom/path/cache-v6.json.
+- **doctor reports cache file not found** — Make sure Granola is installed and you’ve opened it at least once. Override the path with `GRANOLA_CACHE_PATH=/custom/path/cache-v6.json`; when unset, the CLI prefers the encrypted sibling `cache-v6.json.enc` automatically.
 - **WorkOS token expired warning** — Open the Granola desktop app once — it refreshes the token. Or pass a personal API key via GRANOLA_API_KEY to route through the public API instead.
 - **memo run --since reports duplicate_of** — A file with the same title-date-attendees fingerprint already exists in --to. Pick a different `--to` directory, remove the existing file, or `mv` it out of the way.
 - **Transcript missing for a recent meeting** — Granola hasn’t flushed it yet. Run warm <id> <q> --launch to bring it forward in the GUI, wait 30 s, then re-run preflight.

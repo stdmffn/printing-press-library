@@ -21,11 +21,7 @@ name: Auto-tag npm release on version bump
 # this workflow entirely, by design.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'npm/package.json'
-
+  workflow_dispatch:
 permissions:
   contents: write   # needs to push the tag
 

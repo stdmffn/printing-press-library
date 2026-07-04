@@ -23,18 +23,7 @@ name: Regenerate registry.json and README catalog
 # for the field derivation rules.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'library/**/.printing-press.json'
-      - 'library/**/manifest.json'
-      - 'library/**/.goreleaser.yaml'
-      - 'registry.json'
-      - 'README.md'
-      - 'tools/generate-registry/**'
-      - '.github/workflows/generate-registry.yml'
   workflow_dispatch:
-
 permissions:
   contents: write
 

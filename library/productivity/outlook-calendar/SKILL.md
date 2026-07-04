@@ -151,6 +151,12 @@ These capabilities aren't available in any other tool for this API.
 - `outlook-calendar-pp-cli events update` — Update fields on an existing event (subject, body, time, location, attendees)
 
 
+### Time windows and delta sync
+
+`events range --from/--to` accepts RFC3339 timestamps, `YYYY-MM-DD`, `YYYY-MM-DD HH:MM:SS`, `now`, `today`, `tomorrow`, and signed offsets `+/-N[d|w|h|m]`. Relative `--to` values anchor on the resolved `--from`, so `--from today --to +1d` means today's calendar day. The same parser is used by local-store commands such as `conflicts`, `freetime`, and `prep`; `delta view --from/--to` still expects ISO values for its initial Graph sync.
+
+`delta events --top N` sets Graph's page-size preference with `Prefer: odata.maxpagesize=N`; the CLI does not send `$top` to `/me/events/delta`.
+
 ### Finding the right command
 
 When you know what you want to do but not which command does it, ask the CLI directly:

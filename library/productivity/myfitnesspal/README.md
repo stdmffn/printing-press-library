@@ -112,7 +112,9 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 
 ## Authentication
 
-MyFitnessPal closed their public API. This CLI uses your logged-in browser session — log in to myfitnesspal.com in Chrome, then run `myfitnesspal-pp-cli auth login --chrome`. Cookies are read from the .myfitnesspal.com domain. Sessions usually last 7-30 days; when they expire, log in again in Chrome and re-run `auth login --chrome`.
+MyFitnessPal closed their public API. This CLI uses your logged-in browser session: log in to myfitnesspal.com in Chrome, then run `myfitnesspal-pp-cli auth login --chrome` (`--browser` is an alias). Cookie import requires one installed extractor: `pycookiecheat`, Homebrew `cookies`, or `cookie-scoop-cli`. If you use multiple Chrome profiles, pass `--profile "Profile Name"` when the extractor supports it.
+
+`auth login` reads cookies for `.myfitnesspal.com`, validates the session before saving it, and stores the cookie string in `~/.config/myfitnesspal-pp-cli/config.toml`. Live requests send that stored value as the `Cookie` header through the CLI's Chrome-fingerprinted Surf transport; the transport is what clears MyFitnessPal's anti-bot checks. Sessions usually last 7-30 days. When one expires, log in again in Chrome and run `myfitnesspal-pp-cli auth refresh` or `myfitnesspal-pp-cli auth login --chrome`.
 
 ## Quick Start
 
@@ -120,7 +122,7 @@ MyFitnessPal closed their public API. This CLI uses your logged-in browser sessi
 # Imports your MFP cookies from Chrome (one-time setup; works after you've logged in to myfitnesspal.com)
 myfitnesspal-pp-cli auth login --chrome
 
-# Verifies the session is valid and api.myfitnesspal.com is reachable
+# Verifies the stored browser session and MyFitnessPal web/API surfaces are reachable
 myfitnesspal-pp-cli doctor
 
 # Pulls four months of diary, exercises, water, measurements, and goals into the local SQLite store
@@ -186,24 +188,24 @@ Run `myfitnesspal-pp-cli --help` for the full command reference and flag list.
 
 ## Commands
 
-### api_user
+### api-user
 
 Authenticated user record on the v2 API (preferences, paid subs, profiles).
 
-- **`myfitnesspal-pp-cli api_user get`** - Get the v2 user record (units, goals preferences, paid subs, profiles).
+- **`myfitnesspal-pp-cli api-user`** - Get the v2 user record (units, goals preferences, paid subs, profiles).
 
 ### diary
 
 Daily food diary (per-meal entries with full nutrient panel).
 
-- **`myfitnesspal-pp-cli diary get_day`** - Get one day's food diary as scraped HTML (legacy surface python-myfitnesspal uses).
-- **`myfitnesspal-pp-cli diary load_recent`** - Load the recent-foods quick-pick list for a meal.
+- **`myfitnesspal-pp-cli diary get-day`** - Get one day's food diary parsed into structured JSON.
+- **`myfitnesspal-pp-cli diary load-recent`** - Load the recent-foods quick-pick list for a meal.
 
 ### exercise
 
 Cardio and strength exercises logged on a given day.
 
-- **`myfitnesspal-pp-cli exercise get_day`** - Get one day's exercise log (cardio + strength) as scraped HTML.
+- **`myfitnesspal-pp-cli exercise`** - Get one day's exercise log (cardio + strength) as scraped HTML.
 
 ### food
 
@@ -211,63 +213,63 @@ Search the public food database, view food details, log custom foods.
 
 - **`myfitnesspal-pp-cli food details`** - Get full nutrient panel for a single food by MFP food id.
 - **`myfitnesspal-pp-cli food search`** - Search the food database.
-- **`myfitnesspal-pp-cli food suggested_servings`** - Get common serving-size suggestions for a food (powers the "1 cup / 100g / medium" picker).
+- **`myfitnesspal-pp-cli food suggested-servings`** - Get common serving-size suggestions for a food (powers the "1 cup / 100g / medium" picker).
 
 ### goals
 
 Daily calorie / macro / water / weight goals.
 
-- **`myfitnesspal-pp-cli goals get`** - Get your current daily goals (calorie target, macro split, water target) as scraped HTML.
+- **`myfitnesspal-pp-cli goals`** - Get your current daily goals (calorie target, macro split, water target) as scraped HTML.
 
 ### measurement
 
 Weight, body fat, and other body measurements (time series).
 
-- **`myfitnesspal-pp-cli measurement get_range`** - Get a date range of values for one measurement type as scraped HTML.
+- **`myfitnesspal-pp-cli measurement get-range`** - Get a date range of values for one measurement type as scraped HTML.
 - **`myfitnesspal-pp-cli measurement types`** - List the measurement types defined for your account (Weight, BodyFat, Neck, Waist, Hips, plus custom).
 
 ### note
 
 Free-text notes attached to a day's food or exercise diary.
 
-- **`myfitnesspal-pp-cli note get`** - Get the food note for a single day.
+- **`myfitnesspal-pp-cli note`** - Get the food note for a single day.
 
 ### reports
 
 Aggregated time-series reports (any nutrient or weight as a date->value series).
 
-- **`myfitnesspal-pp-cli reports get`** - Get a time-series report (e.g. nutrition/Net%20Calories/30 returns the last 30 days of net calories).
+- **`myfitnesspal-pp-cli reports`** - Get a time-series report (e.g. nutrition/Net%20Calories/30 returns the last 30 days of net calories).
 
 ### user
 
 Authenticated user account info, units, and preferences.
 
-- **`myfitnesspal-pp-cli user auth_token`** - Bootstrap a v2 bearer token from your session cookies.
-- **`myfitnesspal-pp-cli user top_foods_server`** - Get your top-logged foods over a date range, computed server-side (powers the "your most-eaten" insights).
+- **`myfitnesspal-pp-cli user auth-token`** - Bootstrap a v2 bearer token from your session cookies.
+- **`myfitnesspal-pp-cli user top-foods-server`** - Get your top-logged foods over a date range, computed server-side (powers the "your most-eaten" insights).
 
 ### water
 
 Daily water intake tracking.
 
-- **`myfitnesspal-pp-cli water get`** - Get water intake for a single day.
+- **`myfitnesspal-pp-cli water`** - Get water intake for a single day.
 
 ## Output Formats
 
 ```bash
 # Human-readable table (default in terminal, JSON when piped)
-myfitnesspal-pp-cli api_user --user-id 550e8400-e29b-41d4-a716-446655440000
+myfitnesspal-pp-cli api-user --user-id 550e8400-e29b-41d4-a716-446655440000
 
 # JSON for scripting and agents
-myfitnesspal-pp-cli api_user --user-id 550e8400-e29b-41d4-a716-446655440000 --json
+myfitnesspal-pp-cli api-user --user-id 550e8400-e29b-41d4-a716-446655440000 --json
 
 # Filter to specific fields
-myfitnesspal-pp-cli api_user --user-id 550e8400-e29b-41d4-a716-446655440000 --json --select id,name,status
+myfitnesspal-pp-cli api-user --user-id 550e8400-e29b-41d4-a716-446655440000 --json --select id,name,status
 
 # Dry run — show the request without sending
-myfitnesspal-pp-cli api_user --user-id 550e8400-e29b-41d4-a716-446655440000 --dry-run
+myfitnesspal-pp-cli api-user --user-id 550e8400-e29b-41d4-a716-446655440000 --dry-run
 
 # Agent mode — JSON + compact + no prompts in one flag
-myfitnesspal-pp-cli api_user --user-id 550e8400-e29b-41d4-a716-446655440000 --agent
+myfitnesspal-pp-cli api-user --user-id 550e8400-e29b-41d4-a716-446655440000 --agent
 ```
 
 ## Agent Usage
@@ -306,7 +308,7 @@ This CLI ships with a focused subset of the planned manifest working end-to-end.
 remaining features are deferred to a follow-up `/printing-press-polish` run.
 
 **Working today:**
-- All JSON-only absorbed endpoints (`food details`, `food suggested-servings`, `food search` request*, `measurement types`, `water get`, `note get`, `reports get`, `api-user get`, `user auth-token`, `user top-foods-server`)
+- All JSON-only absorbed endpoints (`food details`, `food suggested-servings`, `food search` request*, `measurement types`, `water`, `note`, `reports`, `api-user`, `user auth-token`, `user top-foods-server`)
 - `diary get-day` with the HTML parser ported from python-myfitnesspal v2.0.4
 - `pull-diary` (date-range sync into local SQLite)
 - `export csv` (per-food CSV — the headline feature premium MFP doesn't ship)
@@ -332,7 +334,7 @@ The v0.2 features are not stubs in this build — they simply don't exist yet. R
 ### API-specific
 
 - **doctor reports session expired** — Log in to myfitnesspal.com in Chrome (the same profile you used for `auth login --chrome`), then re-run `myfitnesspal-pp-cli auth login --chrome`. Sessions typically last 7-30 days.
-- **auth login --chrome can't find cookies** — Install one of: `pip install pycookiecheat`, `cargo install cookie-scoop-cli`, or `brew install cookies`. Then re-run `auth login --chrome --profile Default`. If you have multiple Chrome profiles, list them with `auth login --chrome --list-profiles`.
+- **auth login --chrome can't find cookies** — Install one of: `pip install pycookiecheat`, `cargo install cookie-scoop-cli`, or `brew install barnardb/cookies/cookies`. Then re-run `auth login --chrome --profile Default`. If you have multiple Chrome profiles, omit `--profile` in an interactive shell to choose from detected profiles, or pass the exact profile name with `--profile`.
 - **/v2/foods/{id} returns 403** — Some food ids are user-scoped (only readable by accounts that have logged that food). Try `food search --query <name>` first to get an accessible food id.
 - **POST /food/search returns the login page** — Session cookie expired. Re-run `auth login --chrome` after logging in to myfitnesspal.com again.
 - **sync fails with 429 rate-limit** — MFP throttles bursty access. The CLI defaults to 1 req/sec; if you raised --concurrency, drop it back to 1 and retry. Wait 60 seconds before re-running.

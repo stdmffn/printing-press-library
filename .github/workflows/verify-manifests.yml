@@ -1,18 +1,7 @@
 name: Verify manifest.json
 
 on:
-  pull_request:
-    paths:
-      - 'library/**/manifest.json'
-      - 'library/**/.printing-press.json'
-      - '.github/workflows/verify-manifests.yml'
-      - '.github/scripts/verify-manifest/**'
-  push:
-    branches: [main]
-    paths:
-      - 'library/**/manifest.json'
-      - '.github/scripts/verify-manifest/**'
-
+  workflow_dispatch:
 jobs:
   verify:
     name: Validate MCPB manifest contract

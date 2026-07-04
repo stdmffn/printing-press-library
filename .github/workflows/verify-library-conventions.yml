@@ -36,18 +36,7 @@ name: Verify library conventions
 #    but artifact completeness remains the source of truth.
 
 on:
-  pull_request:
-    paths:
-      - 'library/**'
-      - 'cli-skills/**'
-      - 'registry.json'
-      - 'tools/generate-skills/**'
-      - 'tools/sweep-canonical/**'
-      - '.github/scripts/verify-attribution/**'
-      - '.github/scripts/verify-publish-package/**'
-      - '.github/workflows/verify-library-conventions.yml'
   workflow_dispatch:
-
 permissions:
   contents: read
 

@@ -136,6 +136,14 @@ outlook-calendar-pp-cli prep --next 4h --json --select subject,location,attendee
 
 ```
 
+### Date windows and delta sync
+
+`events range --from/--to` accepts RFC3339 timestamps, `YYYY-MM-DD`, `YYYY-MM-DD HH:MM:SS`, `now`, `today`, `tomorrow`, and signed offsets `+/-N[d|w|h|m]`. Relative `--to` values anchor on the resolved `--from`, so `--from today --to +1d` covers today's calendar day rather than the next 24 hours from the current clock time.
+
+That shortcut parsing applies to `events range` and the local-store commands such as `conflicts`, `freetime`, and `prep`. `delta view --from/--to` still sends ISO values directly to Microsoft Graph on its initial sync.
+
+`delta events --top N` sets Graph's page-size preference with `Prefer: odata.maxpagesize=N`. It is not sent as `$top`, because `/me/events/delta` rejects `$top` on change-tracking requests.
+
 ## Unique Features
 
 These capabilities aren't available in any other tool for this API.
@@ -244,7 +252,7 @@ Manage Outlook master categories used to tag events
 
 Incremental delta-sync of events into the local SQLite store
 
-- **`outlook-calendar-pp-cli delta events`** - Pull incremental event changes since the last delta token
+- **`outlook-calendar-pp-cli delta events`** - Pull incremental event changes since the last delta token (`--top` uses `Prefer: odata.maxpagesize`)
 - **`outlook-calendar-pp-cli delta view`** - Pull incremental calendar-view changes within a window
 
 ### events
@@ -261,7 +269,7 @@ Outlook calendar events on your default or named calendar
 - **`outlook-calendar-pp-cli events get`** - Get a single event by id
 - **`outlook-calendar-pp-cli events instances`** - List occurrences of a recurring event in a date range
 - **`outlook-calendar-pp-cli events list`** - List events on the default calendar
-- **`outlook-calendar-pp-cli events range`** - List events occurring within a date range (calendarView; expands recurring instances)
+- **`outlook-calendar-pp-cli events range`** - List events occurring within a date range (calendarView; expands recurring instances; accepts ISO dates, `today`, `tomorrow`, `now`, and `+/-N[d|w|h|m]`)
 - **`outlook-calendar-pp-cli events search`** - Server-side search across events ($search query)
 - **`outlook-calendar-pp-cli events snooze`** - Snooze the reminder for an event until a specific time
 - **`outlook-calendar-pp-cli events tentative`** - Tentatively accept a meeting invite
@@ -320,7 +328,7 @@ Environment variables:
 
 | Name | Kind | Required | Description |
 | --- | --- | --- | --- |
-| `OUTLOOK_CALENDAR_TOKEN` | per_call | Yes | Set to your API credential. |
+| `OUTLOOK_CALENDAR_TOKEN` | per_call | No | Optional bearer-token override. Normal setup is `outlook-calendar-pp-cli auth login --device-code`, which saves access and refresh tokens in the config file. |
 
 ## Troubleshooting
 **Authentication errors (exit code 4)**

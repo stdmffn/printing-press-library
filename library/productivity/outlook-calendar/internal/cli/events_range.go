@@ -21,9 +21,10 @@ func newEventsRangeCmd(flags *rootFlags) *cobra.Command {
 	var flagAll bool
 
 	cmd := &cobra.Command{
-		Use:         "range",
-		Short:       "List events occurring within a date range (calendarView; expands recurring instances)",
-		Example:     "  outlook-calendar-pp-cli events range --from 2026-01-15 --to 2026-01-15",
+		Use:   "range",
+		Short: "List events occurring within a date range (calendarView; expands recurring instances)",
+		Example: `  outlook-calendar-pp-cli events range --from today --to +7d
+  outlook-calendar-pp-cli events range --from 2026-05-10T00:00:00 --to 2026-05-17T00:00:00`,
 		Annotations: map[string]string{"pp:endpoint": "events.range", "pp:method": "GET", "pp:path": "/me/calendarView", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !cmd.Flags().Changed("from") && !flags.dryRun {
@@ -117,8 +118,8 @@ func newEventsRangeCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagStartDateTime, "from", "", "Start of the window (ISO 8601, e.g. 2026-05-10T00:00:00)")
-	cmd.Flags().StringVar(&flagEndDateTime, "to", "", "End of the window (ISO 8601, e.g. 2026-05-17T00:00:00)")
+	cmd.Flags().StringVar(&flagStartDateTime, "from", "", "Start of the window (ISO 8601/date, now, today, tomorrow, or +/-N[d|w|h|m])")
+	cmd.Flags().StringVar(&flagEndDateTime, "to", "", "End of the window (same formats; relative offsets anchor on --from)")
 	cmd.Flags().IntVar(&flagTop, "top", 100, "Maximum events to return")
 	cmd.Flags().StringVar(&flagOrderby, "orderby", "start/dateTime", "OData order-by expression")
 	cmd.Flags().StringVar(&flagSelect, "select-fields", "", "Comma-separated OData fields to return on the wire")

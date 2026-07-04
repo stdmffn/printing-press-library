@@ -85,7 +85,7 @@ func newDeltaEventsCmd(flags *rootFlags) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&flagDeltatoken, "delta-token", "", "Delta token from a previous sync (optional; empty starts a fresh sync)")
-	cmd.Flags().IntVar(&flagTop, "top", 200, "Page size")
+	cmd.Flags().IntVar(&flagTop, "top", 200, "Page size hint sent as Prefer: odata.maxpagesize (Graph delta does not support $top)")
 	cmd.Flags().BoolVar(&flagAll, "all", false, "Fetch all pages")
 
 	return cmd

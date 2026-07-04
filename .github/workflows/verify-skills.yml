@@ -1,21 +1,7 @@
 name: Verify SKILL.md
 
 on:
-  pull_request:
-    paths:
-      - 'library/**/.printing-press.json'
-      - 'library/**/SKILL.md'
-      - 'library/**/internal/cli/**'
-      - '.github/workflows/verify-skills.yml'
-      - '.github/scripts/verify-skill/**'
-  push:
-    branches: [main]
-    paths:
-      - 'library/**/.printing-press.json'
-      - 'library/**/SKILL.md'
-      - 'library/**/internal/cli/**'
-      - '.github/scripts/verify-skill/**'
-
+  workflow_dispatch:
 jobs:
   verify:
     name: Validate SKILL.md against shipped CLI source
